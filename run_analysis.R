@@ -29,8 +29,10 @@ dtfull <- rbind(trainingset, testset)
 dtsel <- mutate(dtfull, activityname = activitynames$value[match(activitycode,activitynames$code)])
 dtsel <- select(dtsel, activityname, subject, contains(c("mean()", "std()")))
 
-# Create tidy dataset
+# Create tidy dataset and clean colnames
 df_tidy <- dtsel %>% group_by(activityname, subject) %>% summarise_all(mean)
+colnames(df_tidy) <- gsub("\\()", "", colnames(df_tidy))
+
 
 # Export tidy dataset
 if (!dir.exists("output")) dir.create("output")
