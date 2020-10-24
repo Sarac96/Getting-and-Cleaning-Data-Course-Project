@@ -18,21 +18,19 @@ subjecttest<- fread("data/UCI HAR Dataset/test/subject_test.txt", sep=" ", col.n
 subjecttraining <-fread("data/UCI HAR Dataset/train/subject_train.txt", sep=" ", col.names = "subject")
 activitynames <- fread("data/UCI HAR Dataset/activity_labels.txt", col.names = c("code", "value"))
 
-
-
 #Merge data into one single dataset
 trainingset <- cbind(trainingset_Y, subjecttraining, trainingset_X)
 testset <- cbind(testset_Y, subjecttest, testset_X)
 dtfull <- rbind(trainingset, testset)
 
 # Select only mean and stdev observations
-dtsel <- mutate(dtfull, activityname = activitynames$value[match(activitycode,activitynames$code)])
-dtsel <- select(dtsel, activityname, subject, contains(c("mean()", "std()")))
+dtsel <- select(dtfull, activitycode, subject, contains(c("mean()", "std()")))
+dtsel <- mutate(dtsel, activityname = activitynames$value[match(activitycode,activitynames$code)])
+dtsel <- select(dtsel, - activitycode)
 
 # Create tidy dataset and clean colnames
 df_tidy <- dtsel %>% group_by(activityname, subject) %>% summarise_all(mean)
 colnames(df_tidy) <- gsub("\\()", "", colnames(df_tidy))
-
 
 # Export tidy dataset
 if (!dir.exists("output")) dir.create("output")
