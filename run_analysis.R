@@ -34,4 +34,4 @@ colnames(df_tidy) <- gsub("\\()", "", colnames(df_tidy))
 
 # Export tidy dataset
 if (!dir.exists("output")) dir.create("output")
-write.csv(df_tidy,"output/tidy_dataset.csv", row.names = FALSE, na="")
+write.table(df_tidy,"output/tidy_dataset.txt", row.names = FALSE, na="")
